@@ -1,36 +1,23 @@
 def decode_string(s)
-  k_stack = []
-  str_stack = []
-
+  stack = []
   i = 0
   while i < s.length
-
-    # if digit, traverse for k value and push onto k_stack
-    if "0123456789".include?(s[i])
-      k = ""
-      while "0123456789".include?(s[i])
-        k += s[i]
-        i += 1
-      end
-      k_stack.push(k.to_i)
-      i -= 1
-
-    # if closing bracket, pop from str_stack for encoded_string
-    # multiply the encoded_string with the last k value in k_stack
-    elsif s[i] == "]"
+    if s[i] == "]"
       str = ""
-      until str_stack[-1] == "["
-        str += str_stack.pop
+      k = ""
+      until stack[-1] == "["
+        str = stack.pop + str
       end
-      str_stack.pop
-      str_stack.push(str * k_stack.pop)
-
+      stack.pop
+      while stack.length > 0 && '1234567890'.include?(stack[-1])
+        k = stack.pop + k
+        p stack
+      end
+      k.to_i.times { |_| stack.push(str) }
     else
-      str_stack.push(s[i])
+      stack.push(s[i])
     end
-
     i += 1
   end
-
-  str_stack[0].reverse
+  stack.join("")
 end
